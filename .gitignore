@@ -218,7 +218,7 @@ pip-log.txt
 /Library/FailedAssetImports.txt
 /Library/cache/
 /Library/previews/
-/Library/ScriptAssembliesS
+/Library/ScriptAssemblies
 [Tt]temp/
 [Oo]bj/
 .DS_Store
