@@ -13,17 +13,24 @@ public class AutonomousVehicle: Vehicle
 	CharacterController _characterController;
 	#endregion
 	
+	public float gravity; 
+	ZombieControl zCtrl;
 	
 	#region Methods
 	void Start()
 	{
 		_rigidbody = GetComponent<Rigidbody>();
 		_characterController = GetComponent<CharacterController>();
+		zCtrl = GetComponent<ZombieControl>(); 
+		gravity = 20.0f; 
 	}
 		
 	
 	void FixedUpdate()
 	{
+		//Update the last position in the Zombie Control
+		if (zCtrl != null) zCtrl.lastPosition = transform.position; 
+		
 		var force = Vector3.zero;
 
 		Profiler.BeginSample("Calculating forces");
@@ -101,7 +108,13 @@ public class AutonomousVehicle: Vehicle
 		var delta = (newVelocity * elapsedTime);
 		if (_characterController != null) 
 		{
-			_characterController.Move(delta);
+			if (_characterController.isGrounded) {
+				_characterController.Move(delta);
+			} else {
+				delta.y -= gravity * Time.deltaTime; 
+				_characterController.Move(delta) ;
+			}
+			
 		}
 		else if (_rigidbody == null || _rigidbody.isKinematic)
 		{
@@ -122,6 +135,9 @@ public class AutonomousVehicle: Vehicle
 		// new velocity, but this behavior may be overridden by derived classes.)
 		RegenerateLocalSpace (newVelocity);
 	}	
+	
+
+	
 	#endregion
 }
 
