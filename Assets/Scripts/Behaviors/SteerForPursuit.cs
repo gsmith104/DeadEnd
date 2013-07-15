@@ -18,6 +18,8 @@ public class SteerForPursuit : Steering
 	
 	[SerializeField]
 	float _maxPredictionTime = 5;
+	
+	enum Behaviors { idle, chase, attack, eat};
 	#endregion
 	
 	#region Public properties
@@ -64,6 +66,17 @@ public class SteerForPursuit : Steering
 		if (_quarry == null) {
 			this.enabled = false;
 			return Vector3.zero;
+		}
+		
+		ZombieControl zCtrl = GetComponent<ZombieControl>();
+		if (zCtrl != null) {
+			if (zCtrl.usePursuitScript == false &&
+			   (zCtrl.behavior == (int) Behaviors.attack || zCtrl.behavior == (int) Behaviors.chase) ) {
+				return Vector3.zero; 
+				this.enabled = false; 
+			} else {
+				this.enabled = true; 
+			}
 		}
 		
 		var force    = Vector3.zero;
